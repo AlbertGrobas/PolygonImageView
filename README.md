@@ -38,7 +38,7 @@ To use PolygonImageView, add the module into your project and start to build xml
 * `app:poly_border` (boolean)         -> default false
 * `app:poly_border_color` (color)     -> default White
 * `app:poly_border_width` (dimension) -> default 4dp
-* `app:poly_corner_radius` (float)    -> default 0
+* `app:poly_corner_radius` (float)    -> default 0.0f
 * `app:poly_rotation_angle` (float)   -> default 0.0f
 
 

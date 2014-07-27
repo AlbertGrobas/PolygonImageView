@@ -50,7 +50,6 @@ Thumbs.db
 .gradle
 gradlew
 gradlew.bat
-gradle/
 build/
 polygonimageview/build
 sample/build
