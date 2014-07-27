@@ -1,0 +1,87 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <net.grobas.view.PolygonImageView
+            android:id="@+id/kitty01"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat07"
+            app:poly_shadow="true"
+            app:poly_border="true"
+            app:poly_border_color="@android:color/white"
+            app:poly_vertices="6"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="25"
+            app:poly_rotation_angle="0" />
+
+        <net.grobas.view.PolygonImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat03"
+            app:poly_shadow="true"
+            app:poly_border="false"
+            app:poly_border_color="@android:color/white"
+            app:poly_vertices="0"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="5"
+            app:poly_rotation_angle="0" />
+
+        <net.grobas.view.PolygonImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat01"
+            app:poly_shadow="false"
+            app:poly_border="true"
+            app:poly_border_color="@android:color/white"
+            app:poly_vertices="3"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="5"
+            app:poly_rotation_angle="270" />
+
+        <net.grobas.view.PolygonImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat04"
+            app:poly_shadow="false"
+            app:poly_border="false"
+            app:poly_border_color="@android:color/white"
+            app:poly_vertices="4"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="5"
+            app:poly_rotation_angle="50" />
+
+        <net.grobas.view.PolygonImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat05"
+            app:poly_shadow="true"
+            app:poly_border="true"
+            app:poly_border_color="@android:color/white"
+            app:poly_vertices="8"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="5"
+            app:poly_rotation_angle="0" />
+
+        <net.grobas.view.PolygonImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cat06"
+            app:poly_shadow="true"
+            app:poly_border="true"
+            app:poly_border_color="#33b5e5"
+            app:poly_vertices="8"
+            app:poly_border_width="5dp"
+            app:poly_corner_radius="15"
+            app:poly_rotation_angle="0" />
+
+    </LinearLayout>
+</ScrollView>
