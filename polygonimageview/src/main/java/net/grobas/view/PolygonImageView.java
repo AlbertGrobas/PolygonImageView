@@ -21,7 +21,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,17 +34,15 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
- *
  * Construct a custom ImageView with a regular polygonal form.
  * The number of vertices determines the polygon form.
  * Special cases for vertex number are:
- *      0 -> Circle
- *      1 -> Regular ImageView
- *      2 -> Square
+ * 0 -> Circle
+ * 1 -> Regular ImageView
+ * 2 -> Square
  * Use square images
  *
  * @author Albert Grobas
@@ -121,14 +118,14 @@ public class PolygonImageView extends ImageView {
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setPathEffect(new CornerPathEffect(cornerRadius));
         mBorderPaint.setColor(borderColor);
-        if(isBordered)
+        if (isBordered)
             mBorderPaint.setStrokeWidth(borderWidth);
 
         //Avoid known shadow problems
-        if(Build.VERSION.SDK_INT > 13)
+        if (Build.VERSION.SDK_INT > 13)
             setLayerType(LAYER_TYPE_SOFTWARE, mBorderPaint);
 
-        if(hasShadow) {
+        if (hasShadow) {
             //Shadow on border even if isBordered is false. Better effect and performance that
             //using shadow on main paint
             mBorderPaint.setShadowLayer(DEFAULT_SHADOW_RADIUS, DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_SHADOW_COLOR);
@@ -154,7 +151,7 @@ public class PolygonImageView extends ImageView {
         canvasHeight = h;
         updatePolygonSize();
 
-        if(Math.min(canvasWidth, canvasHeight) != Math.min(oldW, oldH))
+        if (Math.min(canvasWidth, canvasHeight) != Math.min(oldW, oldH))
             refreshImage();
     }
 
@@ -165,28 +162,28 @@ public class PolygonImageView extends ImageView {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        if(getDrawable() == null || getDrawable().getIntrinsicWidth() == 0 ||
+        if (getDrawable() == null || getDrawable().getIntrinsicWidth() == 0 ||
                 getDrawable().getIntrinsicHeight() == 0)
             return;
 
-        switch(numVertices) {
+        switch (numVertices) {
             case 0: //CIRCLE
-                if(hasShadow || isBordered)
-                    canvas.drawCircle(centerX, centerY, mDiameter/2, mBorderPaint);
-                canvas.drawCircle(centerX, centerY, mDiameter/2, mPaint);
+                if (hasShadow || isBordered)
+                    canvas.drawCircle(centerX, centerY, mDiameter / 2, mBorderPaint);
+                canvas.drawCircle(centerX, centerY, mDiameter / 2, mPaint);
                 break;
             case 1: //REGULAR IMAGEVIEW
                 super.onDraw(canvas);
                 break;
             case 2: //SQUARE
-                if(hasShadow || isBordered)
-                    canvas.drawRect(centerX - mDiameter/2, centerY - mDiameter/2, centerX + mDiameter/2,
-                            centerY + mDiameter/2, mBorderPaint);
-                canvas.drawRect(centerX - mDiameter/2, centerY - mDiameter/2, centerX + mDiameter/2,
-                        centerY + mDiameter/2, mPaint);
+                if (hasShadow || isBordered)
+                    canvas.drawRect(centerX - mDiameter / 2, centerY - mDiameter / 2, centerX + mDiameter / 2,
+                            centerY + mDiameter / 2, mBorderPaint);
+                canvas.drawRect(centerX - mDiameter / 2, centerY - mDiameter / 2, centerX + mDiameter / 2,
+                        centerY + mDiameter / 2, mPaint);
                 break;
             default: //POLYGON
-                if(hasShadow || isBordered)
+                if (hasShadow || isBordered)
                     canvas.drawPath(mPath, mBorderPaint);
                 canvas.drawPath(mPath, mPaint);
         }
@@ -218,9 +215,9 @@ public class PolygonImageView extends ImageView {
      */
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        super.setPadding(left, top , right, bottom);
-        updatePolygonSize(left, top , right, bottom);
-        invalidate(left, top , right, bottom);
+        super.setPadding(left, top, right, bottom);
+        updatePolygonSize(left, top, right, bottom);
+        invalidate(left, top, right, bottom);
     }
 
     /**
@@ -232,6 +229,7 @@ public class PolygonImageView extends ImageView {
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         refreshImage();
+        invalidate();
     }
 
     /**
@@ -243,6 +241,7 @@ public class PolygonImageView extends ImageView {
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         refreshImage();
+        invalidate();
     }
 
     /**
@@ -254,6 +253,7 @@ public class PolygonImageView extends ImageView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         refreshImage();
+        invalidate();
     }
 
     /**
@@ -265,6 +265,7 @@ public class PolygonImageView extends ImageView {
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         refreshImage();
+        invalidate();
     }
 
     /**
@@ -273,7 +274,7 @@ public class PolygonImageView extends ImageView {
     private void refreshImage() {
         Bitmap image = drawableToBitmap(getDrawable());
         int canvasSize = Math.min(canvasWidth, canvasHeight);
-        if(canvasSize > 0 && image != null) {
+        if (canvasSize > 0 && image != null) {
             //Preserve image ratio if it is not square
             BitmapShader shader = new BitmapShader(ThumbnailUtils.extractThumbnail(image, canvasSize, canvasSize),
                     Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
@@ -286,18 +287,18 @@ public class PolygonImageView extends ImageView {
      * Rotate vertices with the variable angle.
      */
     private void rebuildPolygon() {
-        if(mPath == null)
+        if (mPath == null)
             mPath = new Path();
         else
             mPath.reset();
         //recalculate new center
         int borderNeeded = isBordered ? borderWidth : 0;
-        centerX = mDiameter/2 + (float)(getPaddingLeft() + getPaddingRight())/2 + borderNeeded +
+        centerX = mDiameter / 2 + (float) (getPaddingLeft() + getPaddingRight()) / 2 + borderNeeded +
                 shadowRadius + Math.abs(shadowXOffset);
-        centerY = mDiameter/2 + (float)(getPaddingTop() + getPaddingBottom())/2 + borderNeeded +
+        centerY = mDiameter / 2 + (float) (getPaddingTop() + getPaddingBottom()) / 2 + borderNeeded +
                 shadowRadius + Math.abs(shadowYOffset);
 
-        if(numVertices < 3)
+        if (numVertices < 3)
             return;
 
         float pointX, pointY, rotatedPointX, rotatedPointY;
@@ -306,21 +307,21 @@ public class PolygonImageView extends ImageView {
         int i = 0;
         do {
             //next vertex point
-            pointX = centerX + mDiameter/2f * (float)Math.cos(2 * Math.PI * i / numVertices);
-            pointY = centerY + mDiameter/2f * (float)Math.sin(2 * Math.PI * i / numVertices);
+            pointX = centerX + mDiameter / 2f * (float) Math.cos(2 * Math.PI * i / numVertices);
+            pointY = centerY + mDiameter / 2f * (float) Math.sin(2 * Math.PI * i / numVertices);
             //rotate vertex
-            rotatedPointX = (float)(Math.cos(angleRadians) * (pointX-centerX) -
-                    Math.sin(angleRadians) * (pointY-centerY) + centerX);
-            rotatedPointY = (float)(Math.sin(angleRadians) * (pointX-centerX) +
-                    Math.cos(angleRadians) * (pointY-centerY) + centerY);
+            rotatedPointX = (float) (Math.cos(angleRadians) * (pointX - centerX) -
+                    Math.sin(angleRadians) * (pointY - centerY) + centerX);
+            rotatedPointY = (float) (Math.sin(angleRadians) * (pointX - centerX) +
+                    Math.cos(angleRadians) * (pointY - centerY) + centerY);
 
-            if(i == 0) { //move to first vertex
+            if (i == 0) { //move to first vertex
                 mPath.moveTo(rotatedPointX, rotatedPointY);
             } else {
                 mPath.lineTo(rotatedPointX, rotatedPointY);
             }
             i++;
-        } while(i < numVertices);
+        } while (i < numVertices);
         mPath.close();
     }
 
@@ -341,11 +342,11 @@ public class PolygonImageView extends ImageView {
      */
     private void updatePolygonSize(int l, int t, int r, int b) {
         int borderPadding = isBordered ? borderWidth : 0;
-        float xPadding = (float)(l + r + borderPadding*2 + shadowRadius*2 + Math.abs(shadowXOffset));
-        float yPadding = (float)(t + b + borderPadding*2 + shadowRadius*2 + Math.abs(shadowYOffset) );
-        float diameter = Math.min((float)canvasWidth - xPadding, (float)canvasHeight - yPadding);
+        float xPadding = (float) (l + r + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowXOffset));
+        float yPadding = (float) (t + b + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowYOffset));
+        float diameter = Math.min((float) canvasWidth - xPadding, (float) canvasHeight - yPadding);
         //if the size is changed we need to rebuild the polygon
-        if(diameter != mDiameter) {
+        if (diameter != mDiameter) {
             mDiameter = diameter;
             rebuildPolygon();
         }
@@ -416,7 +417,7 @@ public class PolygonImageView extends ImageView {
      * @param borderWidthPixels new width in pixels.
      */
     public void setBorderWidth(int borderWidthPixels) {
-        if(isBordered) {
+        if (isBordered) {
             borderWidth = borderWidthPixels;
             updateBorderSpecs();
         }
@@ -467,16 +468,16 @@ public class PolygonImageView extends ImageView {
      * Adds a default shadow
      */
     public void addShadow() {
-        addShadow(DEFAULT_SHADOW_RADIUS, DEFAULT_X_OFFSET,DEFAULT_Y_OFFSET, DEFAULT_SHADOW_COLOR);
+        addShadow(DEFAULT_SHADOW_RADIUS, DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_SHADOW_COLOR);
     }
 
     /**
      * Adds a specific shadow.
      *
-     * @param radius shadow blur size.
+     * @param radius  shadow blur size.
      * @param offsetX negative value moves shadow to left and positive to right.
      * @param offsetY negative value moves shadow down and positive towards up.
-     * @param color shadow color
+     * @param color   shadow color
      */
     public void addShadow(float radius, float offsetX, float offsetY, int color) {
         shadowRadius = radius;
@@ -493,7 +494,7 @@ public class PolygonImageView extends ImageView {
      * Removes shadow
      */
     public void clearShadow() {
-        if(!hasShadow)
+        if (!hasShadow)
             return;
 
         shadowRadius = 0f;
@@ -512,10 +513,9 @@ public class PolygonImageView extends ImageView {
      * @return new bitmap
      */
     private static Bitmap drawableToBitmap(Drawable drawable) {
-        if(drawable == null) {
+        if (drawable == null) {
             return null;
-        }
-        else if(drawable instanceof BitmapDrawable) {
+        } else if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         }
 
@@ -525,7 +525,13 @@ public class PolygonImageView extends ImageView {
         int height = drawable.getIntrinsicHeight();
         height = height > 0 ? height : 1;
 
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap;
+        try {
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
+
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);

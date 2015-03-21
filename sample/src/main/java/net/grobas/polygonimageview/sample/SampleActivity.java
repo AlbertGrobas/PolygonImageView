@@ -20,7 +20,7 @@ public class SampleActivity extends ActionBarActivity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 
         PolygonImageView view = new PolygonImageView(this);
-        view.setImageResource(R.drawable.cat01);
+        view.setImageResource(R.drawable.cat07);
 
         view.addShadow(7.5f, 0f, 7.5f, Color.RED);
         view.setBorder(true);
