@@ -34,6 +34,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -92,7 +93,7 @@ public class PolygonImageView extends ImageView {
 
         try {
             rotationAngle = attributes.getFloat(R.styleable.PolygonImageView_poly_rotation_angle, 0f);
-            numVertices = attributes.getInteger(R.styleable.PolygonImageView_poly_vertices, 5);
+            numVertices = attributes.getInteger(R.styleable.PolygonImageView_poly_vertices, 6);
             cornerRadius = attributes.getFloat(R.styleable.PolygonImageView_poly_corner_radius, 0f);
             hasShadow = attributes.getBoolean(R.styleable.PolygonImageView_poly_shadow, false);
             isBordered = attributes.getBoolean(R.styleable.PolygonImageView_poly_border, false);
@@ -118,12 +119,11 @@ public class PolygonImageView extends ImageView {
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setPathEffect(new CornerPathEffect(cornerRadius));
         mBorderPaint.setColor(borderColor);
-        if (isBordered)
-            mBorderPaint.setStrokeWidth(borderWidth);
+        mBorderPaint.setStrokeWidth(isBordered ? borderWidth : 0f);
 
         //Avoid known shadow problems
         if (Build.VERSION.SDK_INT > 13)
-            setLayerType(LAYER_TYPE_SOFTWARE, mBorderPaint);
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
 
         if (hasShadow) {
             //Shadow on border even if isBordered is false. Better effect and performance that
@@ -138,10 +138,10 @@ public class PolygonImageView extends ImageView {
     /**
      * Gets incoming new canvas size and updates polygon form and image if needed.
      *
-     * @param w
-     * @param h
-     * @param oldW
-     * @param oldH
+     * @param w    new Width
+     * @param h    new Height
+     * @param oldW old Width
+     * @param oldH old Height
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
@@ -151,14 +151,51 @@ public class PolygonImageView extends ImageView {
         canvasHeight = h;
         updatePolygonSize();
 
-        if (Math.min(canvasWidth, canvasHeight) != Math.min(oldW, oldH))
+        if (Math.min(canvasWidth, canvasHeight) != Math.min(oldW, oldH)) {
             refreshImage();
+        }
+    }
+
+    /**
+     * Force Override to solve bug on Lollipop
+     *
+     * @param widthMeasureSpec  Width Spec Measure
+     * @param heightMeasureSpec Height Spec Measure
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = measureWidth(widthMeasureSpec);
+        int height = measureHeight(heightMeasureSpec);
+        setMeasuredDimension(width, height);
+    }
+
+    private int measureWidth(int measureSpecWidth) {
+        return measure(measureSpecWidth);
+    }
+
+    private int measureHeight(int measureSpecHeight) {
+        //Force do not square measure to solve bug
+        return (measure(measureSpecHeight) + 1);
+    }
+
+    private int measure(int measureSpec) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        if (specMode == MeasureSpec.EXACTLY || specMode == MeasureSpec.AT_MOST) {
+            result = specSize;
+        } else {
+            result = Math.min(canvasWidth, canvasHeight);
+        }
+
+        return result;
     }
 
     /**
      * Draw the polygon form.
      *
-     * @param canvas
+     * @param canvas main canvas
      */
     @Override
     protected void onDraw(Canvas canvas) {
@@ -192,10 +229,10 @@ public class PolygonImageView extends ImageView {
     /**
      * Take cares about padding changes.
      *
-     * @param start
-     * @param top
-     * @param end
-     * @param bottom
+     * @param start  start
+     * @param top    top
+     * @param end    end
+     * @param bottom bottom
      */
     @TargetApi(17)
     @Override
@@ -208,10 +245,10 @@ public class PolygonImageView extends ImageView {
     /**
      * Take cares about padding changes.
      *
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param left   left
+     * @param top    top
+     * @param right  right
+     * @param bottom bottom
      */
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
@@ -342,8 +379,8 @@ public class PolygonImageView extends ImageView {
      */
     private void updatePolygonSize(int l, int t, int r, int b) {
         int borderPadding = isBordered ? borderWidth : 0;
-        float xPadding = (float) (l + r + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowXOffset));
-        float yPadding = (float) (t + b + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowYOffset));
+        float xPadding = (l + r + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowXOffset));
+        float yPadding = (t + b + borderPadding * 2 + shadowRadius * 2 + Math.abs(shadowYOffset));
         float diameter = Math.min((float) canvasWidth - xPadding, (float) canvasHeight - yPadding);
         //if the size is changed we need to rebuild the polygon
         if (diameter != mDiameter) {
@@ -375,7 +412,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Returns the vertex number.
      *
-     * @return
+     * @return vertex number
      */
     public int getVertices() {
         return numVertices;
@@ -384,7 +421,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Sets the new vertex number and updates polygon form.
      *
-     * @param numVertices
+     * @param numVertices new number of vertices
      */
     public void setVertices(int numVertices) {
         this.numVertices = numVertices;
@@ -395,7 +432,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Indicates if it's bordered.
      *
-     * @return
+     * @return is bordered?
      */
     public boolean isBordered() {
         return isBordered;
@@ -404,7 +441,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Enables or disables the border option.
      *
-     * @param bordered
+     * @param bordered if it's bordered
      */
     public void setBorder(boolean bordered) {
         isBordered = bordered;
@@ -435,7 +472,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Sets new radius for corners and updates view.
      *
-     * @param cornerRadius
+     * @param cornerRadius new corner radius
      */
     public void setCornerRadius(float cornerRadius) {
         this.cornerRadius = cornerRadius;
@@ -509,7 +546,7 @@ public class PolygonImageView extends ImageView {
     /**
      * Transforms a drawable into a bitmap.
      *
-     * @param drawable
+     * @param drawable incoming drawable
      * @return new bitmap
      */
     private static Bitmap drawableToBitmap(Drawable drawable) {
@@ -529,6 +566,7 @@ public class PolygonImageView extends ImageView {
         try {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         } catch (OutOfMemoryError e) {
+            Log.e("PolygonImageView", "OutOfMemory during bitmap creation");
             return null;
         }
 

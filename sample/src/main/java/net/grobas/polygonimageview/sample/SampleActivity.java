@@ -24,9 +24,9 @@ public class SampleActivity extends ActionBarActivity {
 
         view.addShadow(7.5f, 0f, 7.5f, Color.RED);
         view.setBorder(true);
-        view.setBorderWidth(5);
+        view.setBorderWidth(15);
         view.setCornerRadius(5);
-        view.setBorderColorResource(android.R.color.white);
+        view.setBorderColor(Color.RED);
         view.setVertices(6);
 
         layout.addView(view, kitty.getLayoutParams());
