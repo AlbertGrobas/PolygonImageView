@@ -23,6 +23,7 @@
         <attr name="poly_border_color" format="color" />
         <attr name="poly_border_width" format="dimension" />
         <attr name="poly_shadow" format="boolean" />
+        <attr name="poly_shadow_color" format="color" />
     </declare-styleable>
 
     <declare-styleable name="PolygonImageViewTheme" >

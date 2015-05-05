@@ -20,6 +20,7 @@
             app:poly_border_color="@android:color/white"
             app:poly_vertices="6"
             app:poly_border_width="5dp"
+            app:poly_shadow_color="#f01"
             app:poly_corner_radius="25"
             app:poly_rotation_angle="0" />
 
@@ -60,7 +61,7 @@
             app:poly_border="true"
             app:poly_border_color="#33b5e5"
             app:poly_vertices="8"
-            app:poly_border_width="5dp"
+            app:poly_border_width="15dp"
             app:poly_corner_radius="5"
             app:poly_rotation_angle="0" />
 

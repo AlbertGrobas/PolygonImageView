@@ -3,13 +3,16 @@ package net.grobas.polygonimageview.sample;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import net.grobas.view.PaperPolygonShape;
 import net.grobas.view.PolygonImageView;
+import net.grobas.view.RegularPolygonShape;
 
-public class SampleActivity extends ActionBarActivity {
+public class SampleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,9 @@ public class SampleActivity extends ActionBarActivity {
         view.setCornerRadius(5);
         view.setBorderColor(Color.RED);
         view.setVertices(6);
+
+
+        view.setPolygonShape(new PaperPolygonShape(-20, +15));
 
         layout.addView(view, kitty.getLayoutParams());
     }
