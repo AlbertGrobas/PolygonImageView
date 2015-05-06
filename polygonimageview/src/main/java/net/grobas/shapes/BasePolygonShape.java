@@ -1,22 +1,30 @@
-package net.grobas.view;
+package net.grobas.shapes;
 
 import android.graphics.Path;
 
 /**
- * Created by Albert on 05/05/2015.
+ * Base abstract class for implementation shape interface
  */
 abstract public class BasePolygonShape implements PolygonShape {
 
     private Path mPath;
+    private PolygonShapeSpec polygonShapeSpec;
 
     public BasePolygonShape() {
         this.mPath = new Path();
     }
 
+    /**
+     * Return a valid closed path
+     *
+     * @param spec shape specs
+     * @return a Path
+     */
     @Override
     public Path getPolygonPath(PolygonShapeSpec spec) {
-        float pointX, pointY, rotatedPointX, rotatedPointY;
+        float pointX, pointY, rotatedPointX, rotatedPointY, currentPointX = 0f, currentPointY = 0f;
         double angleRadians = Math.toRadians(spec.getRotation());
+        polygonShapeSpec = spec;
 
         mPath.reset();
         int i = 0;
@@ -35,10 +43,14 @@ abstract public class BasePolygonShape implements PolygonShape {
             if (i == 0) { //move to first vertex
                 mPath.moveTo(rotatedPointX, rotatedPointY);
             } else {
-                addEffect(rotatedPointX, rotatedPointY);
+                //how to draw to next point
+                addEffect(currentPointX, currentPointY, rotatedPointX, rotatedPointY);
             }
+
+            currentPointX = rotatedPointX;
+            currentPointY = rotatedPointY;
             i++;
-        } while (i < spec.getNumVertex());
+        } while (i <= spec.getNumVertex());
         mPath.close();
 
         return mPath;
@@ -48,6 +60,18 @@ abstract public class BasePolygonShape implements PolygonShape {
         return mPath;
     }
 
-    abstract void addEffect(float pointX, float pointY);
+    public PolygonShapeSpec getPolygonShapeSpec() {
+        return polygonShapeSpec;
+    }
+
+    /**
+     * Indicates how to draw to next point
+     *
+     * @param currentX current point x
+     * @param currentY current point y
+     * @param nextX next point x
+     * @param nextY next point y
+     */
+    protected abstract void addEffect(float currentX, float currentY, float nextX, float nextY);
 
 }

@@ -5,7 +5,7 @@ Create a custom ImageView with polygonal forms.
 
 
 ![Demo Screenshot 1][1] ![Demo Screenshot 2][2]
-
+![Demo Screenshot 3][3] ![Demo Screenshot 4][4]
 
 Usage
 -----
@@ -19,6 +19,7 @@ To use PolygonImageView, add the module into your project and start to build xml
         android:layout_height="250dp"
         android:src="@drawable/cat07"
         app:poly_shadow="true"
+        app:poly_shadow_color="@android:color/black"
         app:poly_border="true"
         app:poly_border_color="@android:color/white"
         app:poly_vertices="6"
@@ -35,6 +36,7 @@ To use PolygonImageView, add the module into your project and start to build xml
     * `2`  -> Square
     * `>2` -> Polygon form
 * `app:poly_shadow`  (boolean)        -> default false
+* `app:poly_shadow_color` (color)     -> default Black
 * `app:poly_border` (boolean)         -> default false
 * `app:poly_border_color` (color)     -> default White
 * `app:poly_border_width` (dimension) -> default 4dp
@@ -54,9 +56,19 @@ To use PolygonImageView, add the module into your project and start to build xml
     view.setCornerRadius(5);
     view.setBorderColorResource(android.R.color.white);
     view.setVertices(6);
+    view.setPolygonShape(new StarPolygonShape(0.8f, false));
     layout.addView(view);
 ```
 
+###EFFECTS
+
+There are 3 basic effects:
+
+* RegularPolygonShape
+* PaperPolygonShape
+* StarPolygonShape
+
+Create your own effect overriding BasePolygonShape or interface PolygonShape.
 
 License
 -------
@@ -79,4 +91,5 @@ License
 
 [1]: ./art/screen01.png
 [2]: ./art/screen02.png
-
+[3]: ./art/screen03.png
+[4]: ./art/screen04.png

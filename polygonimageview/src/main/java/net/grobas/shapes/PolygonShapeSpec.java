@@ -1,9 +1,9 @@
-package net.grobas.view;
+package net.grobas.shapes;
 
 import android.graphics.Color;
 
 /**
- * Created by Albert on 05/05/2015.
+ * Basic specification for a shape
  */
 public class PolygonShapeSpec {
 

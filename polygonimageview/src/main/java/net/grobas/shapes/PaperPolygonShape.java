@@ -1,10 +1,10 @@
-package net.grobas.view;
+package net.grobas.shapes;
 
 /**
- * Created by Albert on 05/05/2015.
+ * Paper Effect
  */
 public class PaperPolygonShape extends BasePolygonShape {
-
+    //gradient offset
     private int brushOffsetX, brushOffsetY;
 
     public PaperPolygonShape(int brushOffsetX, int brushOffsetY) {
@@ -14,8 +14,9 @@ public class PaperPolygonShape extends BasePolygonShape {
     }
 
     @Override
-    void addEffect(float pointX, float pointY) {
-        getPath().quadTo(pointX + brushOffsetX, pointY + brushOffsetY, pointX, pointY);
+    protected void addEffect(float currentX, float currentY, float nextX, float nextY) {
+        //could be better...
+        getPath().quadTo(nextX + brushOffsetX, nextY + brushOffsetY, nextX, nextY);
     }
 
     public int getBrushOffsetX() {

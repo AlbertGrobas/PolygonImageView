@@ -1,6 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="wrap_content" >
 
     <LinearLayout
@@ -41,11 +42,11 @@
             android:layout_height="250dp"
             android:src="@drawable/cat01"
             app:poly_shadow="true"
-            app:poly_border="false"
+            app:poly_border="true"
             app:poly_border_color="@android:color/white"
-            app:poly_vertices="3"
-            app:poly_border_width="5dp"
-            app:poly_corner_radius="5"
+            app:poly_vertices="16"
+            app:poly_border_width="15dp"
+            app:poly_corner_radius="15"
             app:poly_rotation_angle="270" />
 
         <net.grobas.view.PolygonImageView

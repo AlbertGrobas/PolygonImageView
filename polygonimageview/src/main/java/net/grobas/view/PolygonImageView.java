@@ -40,6 +40,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
+import net.grobas.shapes.PolygonShape;
+import net.grobas.shapes.PolygonShapeSpec;
+import net.grobas.shapes.RegularPolygonShape;
+
 /**
  * Construct a custom ImageView with a regular polygonal form.
  * The number of vertices determines the polygon form.
@@ -201,7 +205,7 @@ public class PolygonImageView extends ImageView {
                 canvas.drawCircle(mPolygonShapeSpec.getCenterX(), mPolygonShapeSpec.getCenterY(),
                         mPolygonShapeSpec.getDiameter() / 2, mPaint);
                 break;
-            case 1: //REGULAR IMAGEVIEW
+            case 1: //REGULAR IMAGE VIEW
                 super.onDraw(canvas);
                 break;
             case 2: //SQUARE
@@ -356,6 +360,9 @@ public class PolygonImageView extends ImageView {
      * @param b Bottom padding.
      */
     private void updatePolygonSize(int l, int t, int r, int b) {
+        if(mPolygonShapeSpec == null)
+            return;
+
         int borderPadding = mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0;
         float xPadding = (l + r + borderPadding * 2 + mPolygonShapeSpec.getShadowRadius() * 2 +
                 Math.abs(mPolygonShapeSpec.getShadowXOffset()));
@@ -371,7 +378,7 @@ public class PolygonImageView extends ImageView {
 
     /**
      *
-     * @param polygonShape
+     * @param polygonShape set new shape
      */
     public void setPolygonShape(PolygonShape polygonShape) {
         mPolygonShape = polygonShape;
@@ -381,7 +388,7 @@ public class PolygonImageView extends ImageView {
 
     /**
      *
-     * @return
+     * @return get current shape
      */
     public PolygonShape getPolygonShape() {
         return mPolygonShape;
@@ -389,7 +396,7 @@ public class PolygonImageView extends ImageView {
 
     /**
      *
-     * @return
+     * @return get current shape spec
      */
     public PolygonShapeSpec getPolygonShapeSpec() {
         return mPolygonShapeSpec;
@@ -397,7 +404,7 @@ public class PolygonImageView extends ImageView {
 
     /**
      *
-     * @param spec
+     * @param spec set shape spec
      */
     public void setPolygonShapeSpec(PolygonShapeSpec spec) {
         this.mPolygonShapeSpec = spec;
@@ -465,11 +472,11 @@ public class PolygonImageView extends ImageView {
     /**
      * Sets new border width.
      *
-     * @param borderWidthPixels new width in pixels.
+     * @param borderWidth new width.
      */
-    public void setBorderWidth(int borderWidthPixels) {
+    public void setBorderWidth(int borderWidth) {
         if (mPolygonShapeSpec.hasBorder()) {
-            mPolygonShapeSpec.setBorderWidth(borderWidthPixels);
+            mPolygonShapeSpec.setBorderWidth(borderWidth);
             updateBorderSpecs();
         }
     }
@@ -478,20 +485,9 @@ public class PolygonImageView extends ImageView {
      * Sets new border width and update polygon size.
      */
     private void updateBorderSpecs() {
-        mBorderPaint.setStrokeWidth(mPolygonShapeSpec.getBorderWidth());
+        mBorderPaint.setStrokeWidth((int) (getResources().getDisplayMetrics().density)*
+                mPolygonShapeSpec.getBorderWidth());
         updatePolygonSize();
-        invalidate();
-    }
-
-    /**
-     * Sets new radius for corners and updates view.
-     *
-     * @param cornerRadius new corner radius
-     */
-    public void setCornerRadius(float cornerRadius) {
-        mPolygonShapeSpec.setCornerRadius(cornerRadius);
-        mBorderPaint.setPathEffect(new CornerPathEffect(cornerRadius));
-        mPaint.setPathEffect(new CornerPathEffect(cornerRadius));
         invalidate();
     }
 
@@ -515,6 +511,34 @@ public class PolygonImageView extends ImageView {
         setBorderColor(getResources().getColor(resourceBorderColor));
     }
 
+    public void addBorder(int borderWidth, int borderColor) {
+        mPolygonShapeSpec.setHasBorder(true);
+        mPolygonShapeSpec.setBorderWidth(borderWidth);
+        mPolygonShapeSpec.setBorderColor(borderColor);
+        mBorderPaint.setColor(borderColor);
+        updateBorderSpecs();
+        invalidate();
+    }
+
+    public void addBorderResource(int borderWidth, @ColorRes int resourceBorderColor) {
+        mPolygonShapeSpec.setHasBorder(true);
+        mPolygonShapeSpec.setBorderWidth(borderWidth);
+        updateBorderSpecs();
+        setBorderColorResource(resourceBorderColor);
+    }
+
+    /**
+     * Sets new radius for corners and updates view.
+     *
+     * @param cornerRadius new corner radius
+     */
+    public void setCornerRadius(float cornerRadius) {
+        mPolygonShapeSpec.setCornerRadius(cornerRadius);
+        mBorderPaint.setPathEffect(new CornerPathEffect(cornerRadius));
+        mPaint.setPathEffect(new CornerPathEffect(cornerRadius));
+        invalidate();
+    }
+
     /**
      * Adds a default shadow
      */
@@ -536,8 +560,14 @@ public class PolygonImageView extends ImageView {
         mPolygonShapeSpec.setShadowYOffset(offsetY);
         mPolygonShapeSpec.setShadowColor(color);
         startShadow();
+    }
 
-
+    public void addShadowResource(float radius, float offsetX, float offsetY, @ColorRes int color) {
+        mPolygonShapeSpec.setShadowRadius(radius);
+        mPolygonShapeSpec.setShadowXOffset(offsetX);
+        mPolygonShapeSpec.setShadowYOffset(offsetY);
+        mPolygonShapeSpec.setShadowColor(getResources().getColor(color));
+        startShadow();
     }
 
     private void startShadow() {
