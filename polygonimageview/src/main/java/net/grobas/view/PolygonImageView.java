@@ -91,8 +91,7 @@ public class PolygonImageView extends ImageView {
             mPolygonShapeSpec.setShadowColor(attributes.getColor(R.styleable.PolygonImageView_poly_shadow_color, Color.BLACK));
             mPolygonShapeSpec.setHasBorder(attributes.getBoolean(R.styleable.PolygonImageView_poly_border, false));
             mPolygonShapeSpec.setBorderColor(attributes.getColor(R.styleable.PolygonImageView_poly_border_color, Color.WHITE));
-            mPolygonShapeSpec.setBorderWidth(attributes.getDimensionPixelOffset(R.styleable.PolygonImageView_poly_border_width,
-                    (int) (getResources().getDisplayMetrics().density) * 4));
+            mPolygonShapeSpec.setBorderWidth(attributes.getDimension(R.styleable.PolygonImageView_poly_border_width, 4));
 
         } finally {
             attributes.recycle();
@@ -111,12 +110,11 @@ public class PolygonImageView extends ImageView {
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setPathEffect(new CornerPathEffect(mPolygonShapeSpec.getCornerRadius()));
-        mBorderPaint.setColor(mPolygonShapeSpec.getBorderColor());
-        mBorderPaint.setStrokeWidth(mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0f);
 
-        //Avoid known shadow problems
-        if (Build.VERSION.SDK_INT > 13)
-            setLayerType(LAYER_TYPE_SOFTWARE, null);
+        if(mPolygonShapeSpec.hasBorder()) {
+            mBorderPaint.setColor(mPolygonShapeSpec.getBorderColor());
+            mBorderPaint.setStrokeWidth(mPolygonShapeSpec.getBorderWidth());
+        }
 
         if (mPolygonShapeSpec.hasShadow()) {
             //Shadow on border even if isBordered is false. Better effect and performance that
@@ -124,6 +122,10 @@ public class PolygonImageView extends ImageView {
             mBorderPaint.setShadowLayer(mPolygonShapeSpec.getShadowRadius(), mPolygonShapeSpec.getShadowXOffset(),
                     mPolygonShapeSpec.getShadowYOffset(), mPolygonShapeSpec.getShadowColor());
         }
+
+        //Avoid known shadow problems
+        if (Build.VERSION.SDK_INT > 13)
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
 
         mPolygonShape = new RegularPolygonShape();
     }
@@ -328,19 +330,16 @@ public class PolygonImageView extends ImageView {
      */
     private void rebuildPolygon() {
         //recalculate new center
-        int borderNeeded = mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0;
+        float borderNeeded = mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0;
+        float shadowNeeded = mPolygonShapeSpec.hasShadow() ? mPolygonShapeSpec.getShadowRadius() : 0;
         mPolygonShapeSpec.setCenterX(mPolygonShapeSpec.getDiameter() / 2 + (float) (getPaddingLeft() +
-                getPaddingRight()) / 2 + borderNeeded + mPolygonShapeSpec.getShadowRadius() +
-                Math.abs(mPolygonShapeSpec.getShadowXOffset()));
+                getPaddingRight()) / 2 + borderNeeded + shadowNeeded);
         mPolygonShapeSpec.setCenterY(mPolygonShapeSpec.getDiameter() / 2 + (float) (getPaddingTop() +
-                getPaddingBottom()) / 2 + borderNeeded + mPolygonShapeSpec.getShadowRadius() +
-                Math.abs(mPolygonShapeSpec.getShadowYOffset()));
+                getPaddingBottom()) / 2 + borderNeeded + shadowNeeded);
 
         if (mPolygonShapeSpec.getNumVertex() < 3)
             return;
 
-        mPolygonShapeSpec.updatePosition(mPolygonShapeSpec.getCenterX(), mPolygonShapeSpec.getCenterY(),
-                mPolygonShapeSpec.getDiameter());
         mPath = mPolygonShape.getPolygonPath(mPolygonShapeSpec);
     }
 
@@ -363,11 +362,10 @@ public class PolygonImageView extends ImageView {
         if(mPolygonShapeSpec == null)
             return;
 
-        int borderPadding = mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0;
-        float xPadding = (l + r + borderPadding * 2 + mPolygonShapeSpec.getShadowRadius() * 2 +
-                Math.abs(mPolygonShapeSpec.getShadowXOffset()));
-        float yPadding = (t + b + borderPadding * 2 + mPolygonShapeSpec.getShadowRadius() * 2 +
-                Math.abs(mPolygonShapeSpec.getShadowYOffset()));
+        float borderPadding = mPolygonShapeSpec.hasBorder() ? mPolygonShapeSpec.getBorderWidth() : 0f;
+        float shadowPadding = mPolygonShapeSpec.hasShadow() ? mPolygonShapeSpec.getShadowRadius() : 0f;
+        float xPadding = (l + r + (borderPadding * 2) + (shadowPadding * 2));
+        float yPadding = (t + b + (borderPadding * 2) + (shadowPadding * 2));
         float diameter = Math.min((float) canvasWidth - xPadding, (float) canvasHeight - yPadding);
         //if the size is changed we need to rebuild the polygon
         if (diameter != mPolygonShapeSpec.getDiameter()) {
@@ -474,19 +472,22 @@ public class PolygonImageView extends ImageView {
      *
      * @param borderWidth new width.
      */
-    public void setBorderWidth(int borderWidth) {
-        if (mPolygonShapeSpec.hasBorder()) {
-            mPolygonShapeSpec.setBorderWidth(borderWidth);
-            updateBorderSpecs();
-        }
+    public void setBorderWidth(float borderWidth) {
+        mPolygonShapeSpec.setBorderWidth(borderWidth * (getResources().getDisplayMetrics().density));
+        updateBorderSpecs();
     }
 
     /**
      * Sets new border width and update polygon size.
      */
     private void updateBorderSpecs() {
-        mBorderPaint.setStrokeWidth((int) (getResources().getDisplayMetrics().density)*
-                mPolygonShapeSpec.getBorderWidth());
+        if(mPolygonShapeSpec.hasBorder()) {
+            mBorderPaint.setStrokeWidth(mPolygonShapeSpec.getBorderWidth());
+            mBorderPaint.setColor(mPolygonShapeSpec.getBorderColor());
+        } else {
+            mBorderPaint.setStrokeWidth(0);
+            mBorderPaint.setColor(0);
+        }
         updatePolygonSize();
         invalidate();
     }
@@ -511,20 +512,15 @@ public class PolygonImageView extends ImageView {
         setBorderColor(getResources().getColor(resourceBorderColor));
     }
 
-    public void addBorder(int borderWidth, int borderColor) {
+    public void addBorder(float borderWidth, int borderColor) {
         mPolygonShapeSpec.setHasBorder(true);
-        mPolygonShapeSpec.setBorderWidth(borderWidth);
+        mPolygonShapeSpec.setBorderWidth(borderWidth * (getResources().getDisplayMetrics().density));
         mPolygonShapeSpec.setBorderColor(borderColor);
-        mBorderPaint.setColor(borderColor);
         updateBorderSpecs();
-        invalidate();
     }
 
-    public void addBorderResource(int borderWidth, @ColorRes int resourceBorderColor) {
-        mPolygonShapeSpec.setHasBorder(true);
-        mPolygonShapeSpec.setBorderWidth(borderWidth);
-        updateBorderSpecs();
-        setBorderColorResource(resourceBorderColor);
+    public void addBorderResource(float borderWidth, @ColorRes int resourceBorderColor) {
+        addBorder(borderWidth, getResources().getColor(resourceBorderColor));
     }
 
     /**
@@ -563,11 +559,7 @@ public class PolygonImageView extends ImageView {
     }
 
     public void addShadowResource(float radius, float offsetX, float offsetY, @ColorRes int color) {
-        mPolygonShapeSpec.setShadowRadius(radius);
-        mPolygonShapeSpec.setShadowXOffset(offsetX);
-        mPolygonShapeSpec.setShadowYOffset(offsetY);
-        mPolygonShapeSpec.setShadowColor(getResources().getColor(color));
-        startShadow();
+        addShadow(radius, offsetX, offsetY, getResources().getColor(color));
     }
 
     private void startShadow() {

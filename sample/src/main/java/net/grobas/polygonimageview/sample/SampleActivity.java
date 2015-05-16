@@ -3,6 +3,7 @@ package net.grobas.polygonimageview.sample;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 
 import net.grobas.shapes.PaperPolygonShape;
@@ -16,15 +17,17 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         PolygonImageView kitty = (PolygonImageView) findViewById(R.id.kitty01);
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 
         PolygonImageView view = new PolygonImageView(this);
         view.setImageResource(R.drawable.cat07);
 
-        view.addShadow(15f, 0f, 7.5f, Color.YELLOW);
-        view.addBorder(15, Color.WHITE);
-        view.setCornerRadius(15);
+        view.addShadow(10f, 0f, 0f, Color.RED);
+        view.addBorder(10, Color.WHITE);
+        view.setCornerRadius(10);
         view.setVertices(16);
 
         view.setPolygonShape(new StarPolygonShape(0.8f, false));
@@ -32,12 +35,13 @@ public class SampleActivity extends AppCompatActivity {
 
         PolygonImageView view2 = new PolygonImageView(this);
         view2.setImageResource(R.drawable.cat01);
-        view2.addShadow(7f, 0f, 0f, Color.BLACK);
+        view2.addShadow(15f, 0f, 0f, Color.BLACK);
         view2.addBorder(10, Color.WHITE);
         view2.setCornerRadius(10);
-        view2.setVertices(23);
+        view2.setVertices(24);
 
         view2.setPolygonShape(new StarPolygonShape(0.8f, true));
+
         layout.addView(view2, kitty.getLayoutParams());
 
         PolygonImageView view3 = new PolygonImageView(this);
@@ -49,8 +53,6 @@ public class SampleActivity extends AppCompatActivity {
 
         view3.setPolygonShape(new PaperPolygonShape(-15, 25));
         layout.addView(view3, kitty.getLayoutParams());
-
-
 
     }
 

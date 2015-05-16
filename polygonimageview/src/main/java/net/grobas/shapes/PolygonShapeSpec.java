@@ -19,7 +19,7 @@ public class PolygonShapeSpec {
     private boolean hasBorder;
     private float cornerRadius;
     private int borderColor;
-    private int borderWidth;
+    private float borderWidth;
     private boolean hasShadow;
     private float shadowRadius;
     private float shadowXOffset, shadowYOffset;
@@ -51,11 +51,11 @@ public class PolygonShapeSpec {
         this.borderColor = borderColor;
     }
 
-    public int getBorderWidth() {
+    public float getBorderWidth() {
         return borderWidth;
     }
 
-    public void setBorderWidth(int borderWidth) {
+    public void setBorderWidth(float borderWidth) {
         this.borderWidth = borderWidth;
     }
 

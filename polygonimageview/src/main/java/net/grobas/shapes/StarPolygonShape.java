@@ -22,15 +22,15 @@ public class StarPolygonShape extends BasePolygonShape {
     protected void addEffect(float currentX, float currentY, float nextX, float nextY) {
         float cX = getPolygonShapeSpec().getCenterX();
         float cY = getPolygonShapeSpec().getCenterY();
-        float radius = (getPolygonShapeSpec().getDiameter()/2f) * radiusScale;
+        float radius = (getPolygonShapeSpec().getDiameter() / 2f) * radiusScale;
 
-        float pX = (currentX + nextX)/2f;
-        float pY = (currentY + nextY)/2f;
+        float pX = (currentX + nextX) / 2f;
+        float pY = (currentY + nextY) / 2f;
 
         List<GeometryUtil.Point> p = GeometryUtil.getCircleLineIntersectionPoint(new GeometryUtil.Point(pX, pY),
                 new GeometryUtil.Point(cX, cY), new GeometryUtil.Point(cX, cY), radius);
 
-        if(isConcave) {
+        if (isConcave) {
             getPath().quadTo((float) p.get(0).x, (float) p.get(0).y, nextX, nextY);
         } else {
             getPath().lineTo((float) p.get(0).x, (float) p.get(0).y);
