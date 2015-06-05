@@ -5,7 +5,7 @@ import android.graphics.Path;
 /**
  * Base abstract class for implementation shape interface
  */
-abstract public class BasePolygonShape implements PolygonShape {
+public abstract class BasePolygonShape implements PolygonShape {
 
     private Path mPath;
     private PolygonShapeSpec polygonShapeSpec;
@@ -72,6 +72,6 @@ abstract public class BasePolygonShape implements PolygonShape {
      * @param nextX next point x
      * @param nextY next point y
      */
-    protected abstract void addEffect(float currentX, float currentY, float nextX, float nextY);
+    abstract protected void addEffect(float currentX, float currentY, float nextX, float nextY);
 
 }

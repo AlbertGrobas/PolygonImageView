@@ -70,16 +70,22 @@
                 app:poly_border="true"
                 app:poly_border_color="@android:color/white"
                 app:poly_border_width="15dp"
-                app:poly_corner_radius="15"
-                app:poly_rotation_angle="270"
+                app:poly_corner_radius="5"
+                app:poly_rotation_angle="90"
                 app:poly_shadow="true"
-                app:poly_vertices="16" />
+                app:poly_vertices="4" />
 
             <net.grobas.view.PolygonImageView
                 android:layout_width="250dp"
                 android:layout_height="250dp"
+                android:src="@drawable/cat04"
+                app:poly_border="true"
+                app:poly_border_color="@android:color/white"
+                app:poly_border_width="15dp"
+                app:poly_corner_radius="5"
+                app:poly_rotation_angle="90"
                 app:poly_shadow="true"
-                android:src="@drawable/cat04" />
+                app:poly_vertices="6"/>
 
             <net.grobas.view.PolygonImageView
                 android:layout_width="250dp"

@@ -3,9 +3,11 @@ PolygonImageView
 
 Create a custom ImageView with polygonal forms.
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-PolygonImageView-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1851)
 
-![Demo Screenshot 1][1] ![Demo Screenshot 2][2]
-![Demo Screenshot 3][3] ![Demo Screenshot 4][4]
+![Demo Screenshot 1][1]
+![Demo Screenshot 2][2]
+![Demo Screenshot 3][3]
 
 Usage
 -----
@@ -60,7 +62,7 @@ To use PolygonImageView, add the module into your project and start to build xml
     layout.addView(view);
 ```
 
-###EFFECTS
+###Effects
 
 There are 3 basic effects:
 
@@ -92,4 +94,3 @@ License
 [1]: ./art/screen01.png
 [2]: ./art/screen02.png
 [3]: ./art/screen03.png
-[4]: ./art/screen04.png
