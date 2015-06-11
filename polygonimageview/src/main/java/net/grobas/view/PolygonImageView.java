@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -307,6 +308,18 @@ public class PolygonImageView extends ImageView {
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         refreshImage();
+        invalidate();
+    }
+
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+        mPaint.setColorFilter(cf);
+        invalidate();
+    }
+
+    public void setColorFilterWithBorder(ColorFilter cf) {
+        mPaint.setColorFilter(cf);
+        mBorderPaint.setColorFilter(cf);
         invalidate();
     }
 

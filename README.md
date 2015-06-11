@@ -51,14 +51,12 @@ To use PolygonImageView, add the module into your project and start to build xml
 ```java
     LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
     PolygonImageView view = new PolygonImageView(this);
-    view.setImageResource(R.drawable.cat01);
-    view.addShadow(7.5f, 0f, 7.5f, Color.RED);
-    view.setBorder(true);
-    view.setBorderWidth(5);
-    view.setCornerRadius(5);
-    view.setBorderColorResource(android.R.color.white);
-    view.setVertices(6);
-    view.setPolygonShape(new StarPolygonShape(0.8f, false));
+    view.setImageResource(R.drawable.cat);
+    view.addShadowResource(10f, 0f, 7.5f, R.color.shadow);
+    view.addBorderResource(5, R.color.border);
+    view.setCornerRadius(2);
+    view.setVertices(5);
+    view.setPolygonShape(new PaperPolygonShape(-15, 25));
     layout.addView(view);
 ```
 
