@@ -14,7 +14,7 @@ Usage
 
 To use PolygonImageView, add the module into your project and start to build xml or java.
 
-###XML
+### XML
 ```xml
     <net.grobas.view.PolygonImageView
         android:layout_width="250dp"
@@ -30,7 +30,7 @@ To use PolygonImageView, add the module into your project and start to build xml
         app:poly_rotation_angle="25" />
 ```
 
-#####Properties:
+##### Properties:
 
 * `app:poly_vertices` (integer)       -> default 5
     * `0`  -> Circle
@@ -46,7 +46,7 @@ To use PolygonImageView, add the module into your project and start to build xml
 * `app:poly_rotation_angle` (float)   -> default 0.0f
 
 
-###JAVA
+### JAVA
 
 ```java
     LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
@@ -60,7 +60,7 @@ To use PolygonImageView, add the module into your project and start to build xml
     layout.addView(view);
 ```
 
-###Effects
+### Effects
 
 There are 3 basic effects:
 
